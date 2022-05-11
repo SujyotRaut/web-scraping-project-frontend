@@ -36,6 +36,7 @@ const HomePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch(`${API_BASE_URL}/scrape-google-images`, {
+      mode: 'no-cors',
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -46,7 +47,10 @@ const HomePage = () => {
         numOfImages,
         ...searchOptions,
       }),
-    }).catch(() => navigate(`check-scraping-progress/${resJson.data.taskId}`));
+    }).catch(() => navigate('check-scraping-progress/error'));
+
+    console.log(res);
+    if (!res || !res.ok) return navigate('check-scraping-progress/error');
 
     const resJson = await res.json();
     navigate(`check-scraping-progress/${resJson.data.taskId}`);
@@ -169,6 +173,7 @@ const ScrapingProgressPage = () => {
   useEffect(() => {
     const timer = setInterval(async () => {
       const res = await fetch(`${API_BASE_URL}/check-scraping-progress/${taskId}`, {
+        mode: 'no-cors',
         method: 'GET',
       }).catch(() => null);
 
@@ -193,7 +198,7 @@ const ScrapingProgressPage = () => {
           setLoadingAndError({ isLoading: false, error: true });
           clearInterval(timer);
       }
-    }, 1 * 1000);
+    }, 2 * 1000);
   }, []);
 
   const { isLoading, error } = loadingAndError;
