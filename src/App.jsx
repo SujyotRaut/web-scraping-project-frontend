@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:4000';
+const API_BASE_URL = 'https://google-images-scraper-api.herokuapp.com';
 function App() {
   return (
     <div className='position-relative vh-100'>
@@ -46,7 +46,7 @@ const HomePage = () => {
         numOfImages,
         ...searchOptions,
       }),
-    });
+    }).catch(() => navigate(`check-scraping-progress/${resJson.data.taskId}`));
 
     const resJson = await res.json();
     navigate(`check-scraping-progress/${resJson.data.taskId}`);
